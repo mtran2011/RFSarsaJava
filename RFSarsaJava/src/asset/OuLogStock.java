@@ -2,13 +2,13 @@ package asset;
 
 import java.util.Random;
 
-public class OULogStock extends Stock {
+public class OuLogStock extends Stock {
 	private double kappa;
 	private double mu;
 	private double sigma;
 	private Random random;
 	
-	public OULogStock(double price, double minprice, double maxprice, double kappa, double mu, double sigma) {		
+	public OuLogStock(double price, double minprice, double maxprice, double kappa, double mu, double sigma) {		
 		super(price, minprice, maxprice);
 		assert kappa >= 0 && sigma >= 0;
 		this.kappa = kappa;

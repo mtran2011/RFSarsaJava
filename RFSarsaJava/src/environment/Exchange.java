@@ -1,13 +1,21 @@
-package rlenvironment;
+package environment;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import asset.Asset;
 
 public abstract class Exchange {
 	private Set<Trader> traders;
+	private Map<Asset, AssetConfig> assets;
+	private Map<Asset, Double> previousPrices;
+	private Map<Asset, Double> currentPrices;	
 	
-	public Exchange() {
+	public Exchange(Map<Asset, AssetConfig> assets) {
 		traders = new HashSet<Trader>();
+		this.assets = assets;
+		
 	}
 	
 	public boolean registerTrader(Trader trader) {
