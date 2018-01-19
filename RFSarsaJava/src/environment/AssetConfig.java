@@ -3,8 +3,9 @@ package environment;
 // the parameters associated with an asset when the asset is on an exchange
 public class AssetConfig {
 	private int lotsize;
-	private int rounding;
+	private int rounding; // rounding of price to how many decimals
 	private int maxholding;
+	private double tick;
 
 	public int getLotsize() {
 		return lotsize;
@@ -17,6 +18,10 @@ public class AssetConfig {
 	public int getMaxholding() {
 		return maxholding;
 	}
+	
+	public double getTick() {
+		return tick;
+	}
 
 	public AssetConfig(int lotsize, int rounding, int maxholding) {
 		assert lotsize > 0 && maxholding > 0;
@@ -24,6 +29,12 @@ public class AssetConfig {
 		this.lotsize = lotsize;
 		this.rounding = rounding;
 		this.maxholding = maxholding;
-	}
-
+		if (rounding == 0) {
+			tick = 1;
+		} else if (rounding == 1) {
+			tick = 0.1;
+		} else {
+			tick = 0.2;
+		}
+	}	
 }
