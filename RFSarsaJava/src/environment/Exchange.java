@@ -1,5 +1,6 @@
 package environment;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,10 +13,10 @@ public abstract class Exchange {
 	private Set<Trader> traders;
 	private Map<Asset, AssetConfig> assets;	
 	
-	public Exchange(Map<Asset, AssetConfig> assets) {
+	public Exchange() {
 		traders = new HashSet<Trader>();
-		this.assets = assets;		
-	}
+		assets = new HashMap<Asset, AssetConfig>();
+	}		
 	
 	public int getMaxHolding(Asset asset) {
 		if (!assets.containsKey(asset)) {
@@ -24,7 +25,7 @@ public abstract class Exchange {
 		return assets.get(asset).getMaxholding();		
 	}
 	
-	private double roundPrice(double price, int rounding) {
+	protected double roundPrice(double price, int rounding) {
 		assert rounding == 0 || rounding == 1 || rounding ==2;
 		if (rounding == 0) {
 			return Math.round(price);
@@ -32,6 +33,14 @@ public abstract class Exchange {
 			return Math.round(price * 10.0) / 10.0;
 		}
 		return Math.round(price * 100.0) / 100.0;
+	}
+	
+	protected Map<Asset, AssetConfig> getAssets() {
+		return assets;
+	}
+	
+	protected Set<Trader> getTraders() {
+		return traders;
 	}
 	
 	public boolean addAsset(Asset asset, AssetConfig config) {
@@ -72,7 +81,17 @@ public abstract class Exchange {
 	
 	public double execute(Order order) {
 		// execute an order and return the total transaction cost
-		// return null if the order is for an asset not 
+		// return -1 if the order is for an asset not
+		Asset asset = order.getAsset();
+		int quantity = order.getQuantity();
+		if (!assets.containsKey(asset)) {
+			return -1;
+		}
+		AssetConfig config = assets.get(asset);
+		double numLots = Math.abs(quantity) * 1.0 / config.getLotsize();
+		double spreadCost = numLots * config.getTick();
+		double impactCost = Math.pow(numLots, 2) * config.getTick();
+		return spreadCost + impactCost;
 	}
 	
 	// simulate the assets for one step and then notify traders of new asset prices

@@ -1,21 +1,21 @@
 package environment;
 
-import java.util.Map;
-
 import asset.Asset;
 
 public class Order {
-	private Map<Asset, Integer> assetsAndQuantities;
+	private Asset asset;
+	private int quantity;
 	
-	public Order(Map<Asset, Integer> assetsAndQuantities) {
-		this.assetsAndQuantities = assetsAndQuantities;
+	public Asset getAsset() {
+		return asset;
 	}
 
-	public Map<Asset, Integer> getAssetsAndQuantities() {
-		return assetsAndQuantities;
+	public int getQuantity() {
+		return quantity;
 	}
-	
-	public int getQuantity(Asset asset) {
-		return assetsAndQuantities.get(asset);
-	}
+
+	public Order(Asset asset, int quantity) {
+		this.asset = asset;
+		this.quantity = quantity;
+	}	
 }
