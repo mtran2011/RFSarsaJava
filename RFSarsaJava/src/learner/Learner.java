@@ -1,17 +1,18 @@
 package learner;
 
+import java.util.Map;
+
+import common.RLVec;
+import common.StateActionPair;
+
 public abstract class Learner {
-	private StateActionPair lastStateAction;
+	protected StateActionPair lastStateAction;
 	
-	public Learner() {
-		lastStateAction = null;
-	}
+	protected abstract Map<RLVec, Double> findAction(RLVec state);
 	
-	protected abstract Map<RLAction, Double> findAction(RLState state);
-	
-	public abstract RLAction learnAndAct(double reward, RLState state);
+	public abstract RLVec learnAndAct(double reward, RLVec state);
 	
 	public void resetEpisode() {
-		lastStateAction = null; 
+		lastStateAction = null;		
 	}
 }
