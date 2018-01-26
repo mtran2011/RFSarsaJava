@@ -13,6 +13,6 @@ public abstract class Learner {
 	public abstract RLVec learnAndAct(double reward, RLVec state);
 	
 	public void resetEpisode() {
-		lastStateAction = null;		
+		lastStateAction = null;
 	}
 }

@@ -35,8 +35,8 @@ public abstract class Exchange {
 		return Math.round(price * 100.0) / 100.0;
 	}
 	
-	protected Map<Asset, AssetConfig> getAssets() {
-		return assets;
+	protected Set<Asset> getAssets() {
+		return assets.keySet();
 	}
 	
 	protected Set<Trader> getTraders() {
@@ -65,7 +65,7 @@ public abstract class Exchange {
 		}
 	}
 	
-	private void notifyTraders() {
+	protected void notifyTraders() {
 		for (Entry<Asset, AssetConfig> entry: assets.entrySet()) {
 			Asset asset = entry.getKey();
 			AssetConfig config = entry.getValue();

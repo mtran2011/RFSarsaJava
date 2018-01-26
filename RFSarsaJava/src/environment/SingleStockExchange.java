@@ -1,8 +1,6 @@
 package environment;
 
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import asset.Asset;
@@ -26,16 +24,11 @@ public class SingleStockExchange extends Exchange {
 
 	@Override
 	public void simulate(double dt) {		
-		Map<Asset, AssetConfig> stockMap = this.getAssets();
-		assert stockMap.size() == 1;
-		Iterator<Asset> iterator = stockMap.keySet().iterator();
-		Asset stock = iterator.next();
-		AssetConfig config = stockMap.get(stock);		
+		Set<Asset> stockSet = this.getAssets();
+		assert stockSet.size() == 1;
+		Iterator<Asset> iterator = stockSet.iterator();
+		Asset stock = iterator.next();		
 		stock.simulate(dt);
-		double price = roundPrice(stock.getPrice(), config.getRounding());
-		for (Trader trader: this.getTraders()) {
-			trader.getNotified(stock, price);
-		}
-	}
-	
+		notifyTraders();
+	}	
 }
