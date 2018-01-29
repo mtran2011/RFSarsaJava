@@ -17,7 +17,7 @@ public class SingleStockExchange extends Exchange {
 	@Override
 	public void resetEpisode() {
 		// only reset the trader, not reset the stock price
-		for (Trader trader: this.getTraders()) {
+		for (Trader trader: getTraders()) {
 			trader.resetEpisode();
 		}
 	}

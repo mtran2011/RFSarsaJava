@@ -16,6 +16,5 @@ public class StateActionPair implements RLVec {
 	@Override
 	public double[] toArray() {
 		// TODO Auto-generated method stub
-		return null;
 	}
 }

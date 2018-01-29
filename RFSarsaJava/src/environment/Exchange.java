@@ -13,19 +13,17 @@ public abstract class Exchange {
 	private Set<Trader> traders;
 	private Map<Asset, AssetConfig> assets;	
 	
-	public Exchange() {
+	protected Exchange() {
 		traders = new HashSet<Trader>();
 		assets = new HashMap<Asset, AssetConfig>();
 	}		
 	
 	public int getMaxHolding(Asset asset) {
-		if (!assets.containsKey(asset)) {
-			return -1;
-		}
+		assert assets.containsKey(asset); 
 		return assets.get(asset).getMaxholding();		
 	}
 	
-	protected double roundPrice(double price, int rounding) {
+	private double roundPrice(double price, int rounding) {
 		assert rounding == 0 || rounding == 1 || rounding ==2;
 		if (rounding == 0) {
 			return Math.round(price);
@@ -43,7 +41,7 @@ public abstract class Exchange {
 		return traders;
 	}
 	
-	public boolean addAsset(Asset asset, AssetConfig config) {
+	protected boolean addAsset(Asset asset, AssetConfig config) {
 		if (assets.containsKey(asset)) {
 			return false;
 		}
@@ -76,7 +74,7 @@ public abstract class Exchange {
 		}
 	}
 	
-	// reset the asset and also ask each trader to reset
+	// reset the required asset and also ask each trader to reset
 	public abstract void resetEpisode();	
 	
 	public double execute(Order order) {
@@ -84,9 +82,7 @@ public abstract class Exchange {
 		// return -1 if the order is for an asset not
 		Asset asset = order.getAsset();
 		int quantity = order.getQuantity();
-		if (!assets.containsKey(asset)) {
-			return -1;
-		}
+		assert assets.containsKey(asset);
 		AssetConfig config = assets.get(asset);
 		double numLots = Math.abs(quantity) * 1.0 / config.getLotsize();
 		double spreadCost = numLots * config.getTick();
