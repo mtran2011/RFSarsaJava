@@ -1,18 +1,36 @@
 package trader;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import asset.Asset;
+import environment.Exchange;
 import learner.Learner;
 
-public class Trader {
+public abstract class Trader {
 	
-	private Map<Asset, Integer> holdings;
-	private Map<Asset, Double> lastSeenPrices;
+	private class HoldingAndPrice {
+		private int holding;
+		private double lastSeenPrice;
+	}
+		
+	private String name;
+	private double utility;
 	private Learner learner;
-
-	public Trader() {
-		// TODO Auto-generated constructor stub
+	private Exchange exchange;
+	private Map<Asset, HoldingAndPrice> holdings;
+	
+	public Trader(String name, double utility, Learner learner, Exchange exchange) {
+		assert utility >= 0;
+		this.name = name;
+		this.utility = utility;
+		this.learner = learner;
+		this.exchange = exchange;
+		holdings = new HashMap<Asset, HoldingAndPrice>();
+		
+		// TODO
+		
+		this.exchange.registerTrader(this);
 	}
 	
 	public void getNotified(Asset asset, double price) {
@@ -22,4 +40,6 @@ public class Trader {
 	public void resetEpisode() {
 		// TODO Auto-generated
 	}
+	
+	public abstract void placeOrders();
 }

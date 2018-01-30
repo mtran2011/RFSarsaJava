@@ -13,16 +13,6 @@ public abstract class Exchange {
 	private Set<Trader> traders;
 	private Map<Asset, AssetConfig> assets;	
 	
-	protected Exchange() {
-		traders = new HashSet<Trader>();
-		assets = new HashMap<Asset, AssetConfig>();
-	}		
-	
-	public int getMaxHolding(Asset asset) {
-		assert assets.containsKey(asset); 
-		return assets.get(asset).getMaxholding();		
-	}
-	
 	private double roundPrice(double price, int rounding) {
 		assert rounding == 0 || rounding == 1 || rounding ==2;
 		if (rounding == 0) {
@@ -31,6 +21,11 @@ public abstract class Exchange {
 			return Math.round(price * 10.0) / 10.0;
 		}
 		return Math.round(price * 100.0) / 100.0;
+	}
+	
+	protected Exchange() {
+		traders = new HashSet<Trader>();
+		assets = new HashMap<Asset, AssetConfig>();
 	}
 	
 	protected Set<Asset> getAssets() {
@@ -52,6 +47,17 @@ public abstract class Exchange {
 		}
 		return true;
 	}
+
+	protected void notifyTraders() {
+		for (Entry<Asset, AssetConfig> entry: assets.entrySet()) {
+			Asset asset = entry.getKey();
+			AssetConfig config = entry.getValue();
+			double price = roundPrice(asset.getPrice(), config.getRounding());
+			for (Trader trader: traders) {
+				trader.getNotified(asset, price);
+			}
+		}
+	}
 		
 	public void registerTrader(Trader trader) {
 		traders.add(trader);
@@ -63,19 +69,10 @@ public abstract class Exchange {
 		}
 	}
 	
-	protected void notifyTraders() {
-		for (Entry<Asset, AssetConfig> entry: assets.entrySet()) {
-			Asset asset = entry.getKey();
-			AssetConfig config = entry.getValue();
-			double price = roundPrice(asset.getPrice(), config.getRounding());
-			for (Trader trader: traders) {
-				trader.getNotified(asset, price);
-			}
-		}
+	public int getMaxHolding(Asset asset) {
+		assert assets.containsKey(asset); 
+		return assets.get(asset).getMaxholding();		
 	}
-	
-	// reset the required asset and also ask each trader to reset
-	public abstract void resetEpisode();	
 	
 	public double execute(Order order) {
 		// execute an order and return the total transaction cost
@@ -89,6 +86,9 @@ public abstract class Exchange {
 		double impactCost = Math.pow(numLots, 2) * config.getTick();
 		return spreadCost + impactCost;
 	}
+
+	// reset the required asset and also ask each trader to reset
+	public abstract void resetEpisode();	
 	
 	// simulate the assets for one step and then notify traders of new asset prices
 	public abstract void simulate(double dt);
